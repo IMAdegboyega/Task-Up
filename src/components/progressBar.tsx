@@ -9,7 +9,7 @@ const ProgressBar: React.FC<ProgressBarProps> = ({ progress }) => {
   const getProgressColor = () => {
     if (progress < 50) return "bg-red-500"; // Red for beginning
     if (progress < 100) return "bg-blue-400"; // Blue for halfway
-    return "bg-green-700"; // Green for complete
+    return "bg-green-700"; // Green for complete 
   };
 
   return (

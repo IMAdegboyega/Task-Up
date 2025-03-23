@@ -6,12 +6,12 @@ import Employees from "../employees/page";
 import Reports from "../reports/page";
 import Notification from "../notification/page";
 import MyCalendar from "../calendar/page";
-import Message from "../message/page";
+import Message from "../employees/message/page";
 import Settings from "../settings/page";
 import Sidebar from "@/components/sidebar";
 import SearchBar from "@/components/searchbar";
 
-export default function Layout() {
+export default function Layout({ children }: { children: React.ReactNode }) {
   const [activeTab, setActiveTab] = useState("Dashboard");
 
   const pageTitles: Record<string, string> = {
@@ -33,8 +33,8 @@ export default function Layout() {
       {/* Main Content Area */}
       <div className="ml-64 flex-1 flex flex-col text-blue-900 ">
         {/* Fixed Header */}
-        <header className="flex justify-between items-center bg-gray-100 p-4 shadow-none">
-          <h1 className="text-[23px] text-black/90 font-semibold text-center">{pageTitles[activeTab] || "Dashboard"}</h1> 
+        <header className="flex justify-between items-center bg-gray-100 p-10 shadow-none">
+          <h1 className="text-[25px] text-black/90 font-bold text-center">{pageTitles[activeTab]}</h1> 
           
           <div className="flex items-center space-x-4">
             <SearchBar/>
@@ -51,7 +51,7 @@ export default function Layout() {
         </header>
 
         {/* Dynamic Content */}
-        <main className="flex-1 p-6 bg-gray-100">
+        <main className="flex-1 p-10 bg-gray-100">
           {activeTab === "Dashboard" && <Dashboard />}
           {activeTab === "Projects" && <Projects />}
           {activeTab === "Employees" && <Employees />}
