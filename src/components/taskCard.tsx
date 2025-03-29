@@ -13,6 +13,8 @@ interface TaskCardProps {
   userImage?: string;
   userName?: string;
   userRole?: string;
+  createdBy?: string;
+  createdDate?: string;
   onClick: (id: string) => void; // Pass function to handle click
 }
 

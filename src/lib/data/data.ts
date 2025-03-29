@@ -12,6 +12,8 @@ export const tasks = [
     dueDate: "12/05/2020",
     status: "In Progress",
     description: "This is a description of the project, and it is done. Yay! 🎉.",
+    createdBy: "Jane Smith", // Add creator name
+    createdDate: new Date().toISOString(), // Add creation date
   },
   {
     id: "2",
@@ -26,6 +28,8 @@ export const tasks = [
     dueDate: "15/06/2020",
     status: "Important",
     description: "This is a description of the project, and it is done. Yay! 🎉.",
+    createdBy: "Jane Smith", // Add creator name
+    createdDate: new Date().toISOString(), // Add creation date
   },
   {
     id: "3",
@@ -40,6 +44,8 @@ export const tasks = [
     dueDate: "15/06/2020",
     status: "Done",
     description: "This is a description of the project, and it is done. Yay! 🎉.",
+    createdBy: "Jane Smith", // Add creator name
+    createdDate: new Date().toISOString(), // Add creation date
   },
 ];
 export const employees = [
