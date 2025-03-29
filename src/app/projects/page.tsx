@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import TaskCard from "@/components/taskCard";
 import FloatWindow from "@/components/floats";
 import { tasks } from "@/lib/data/data";
@@ -24,6 +24,12 @@ const Projects = () => {
   const [activeFilter, setActiveFilter] = useState<TaskStatus | "all">("all");
   const [isFloatWindowOpen, setIsFloatWindowOpen] = useState(false);
   const [selectedProject, setSelectedProject] = useState<string | null>(null);
+  const [currentDate, setCurrentDate] = useState(""); // Fix SSR date issue
+
+  // Fix SSR mismatch caused by different date formats
+  useEffect(() => {
+    setCurrentDate(new Date().toLocaleDateString());
+  }, []);
 
   // Categorize tasks properly
   const categorizedTasks = useMemo(() => {
@@ -36,19 +42,20 @@ const Projects = () => {
           ? "Important"
           : "In Progress",
     }));
-  }, [tasks]);
+  }, []);
 
-  const counts = {
+  const counts = useMemo(() => ({
     all: categorizedTasks.length,
     Important: categorizedTasks.filter((task) => task.status === "Important").length,
     "In Progress": categorizedTasks.filter((task) => task.status === "In Progress").length,
     Done: categorizedTasks.filter((task) => task.status === "Done").length,
-  };
+  }), [categorizedTasks]);
 
-  const filteredTasks =
-    activeFilter === "all"
+  const filteredTasks = useMemo(() => {
+    return activeFilter === "all"
       ? categorizedTasks
       : categorizedTasks.filter((task) => task.status === activeFilter);
+  }, [activeFilter, categorizedTasks]);
 
   const { text: headerText, color: headerColor } = headerConfig[activeFilter];
 
@@ -129,9 +136,7 @@ const Projects = () => {
           <header className="mb-8 flex justify-between items-center">
             <div>
               <h1 className={`text-3xl font-bold ${headerColor}`}>{headerText}</h1>
-              <p className="text-sm text-gray-500">
-                Reports as of today ({new Date().toLocaleDateString()})
-              </p>
+              <p className="text-sm text-gray-500">Reports as of today ({currentDate})</p>
             </div>
 
             {/* Open Float Window Button */}

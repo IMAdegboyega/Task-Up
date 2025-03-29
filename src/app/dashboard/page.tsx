@@ -85,31 +85,31 @@ export default function Dashboard() {
       </p>
     </header>
 
-    {/* Project Info */}
-    <div className="grid grid-cols-3 gap-6 items-center mb-6 bg-white p-4 rounded-lg shadow-sm">
-      <div>
-        <p className="text-sm text-gray-500">📅 Date Created</p>
-        <p className="text-gray-800 font-medium">
-          {project && new Date(project.createdDate).toLocaleDateString()}
-        </p>
-      </div>
-      <div>
-        <p className="text-sm text-gray-500">📅 Due Date</p>
-        <p className="text-gray-800 font-medium">
-          {project && new Date(project.dueDate).toLocaleDateString()}
-        </p>
-      </div>
-      <div>
-        <p className="text-sm text-gray-500">📊 Total Progress</p>
-          <div className="relative w-full h-2 bg-gray-200 rounded-full">
-            <div
-              className="absolute top-0 left-0 h-full bg-green-700 rounded-full"
-              style={{ width: `${project?.progress}%` }}
-            ></div>
-            </div>
-              <p className="text-gray-800 font-medium mt-1">{project?.progress}%</p>
-            </div>
+      {/* Project Info */}
+      <div className="grid grid-cols-3 gap-6 items-center mb-6 bg-white p-4 rounded-lg shadow-sm">
+          <div>
+            <p className="text-sm text-gray-500">📅 Date Created</p>
+            <p className="text-gray-800 font-medium">
+              {project && new Date(project.createdDate).toLocaleDateString()}
+            </p>
           </div>
+          <div>
+            <p className="text-sm text-gray-500">📅 Due Date</p>
+            <p className="text-gray-800 font-medium">
+              {project && new Date(project.dueDate).toLocaleDateString()}
+            </p>
+          </div>
+            <div>
+              <p className="text-sm text-gray-500">📊 Total Progress</p>
+              <div className="relative w-full h-2 bg-gray-200 rounded-full">
+                <div
+                  className="absolute top-0 left-0 h-full bg-green-700 rounded-full"
+                  style={{ width: `${project?.progress}%` }}
+                ></div>
+              </div>
+                <p className="text-gray-800 font-medium mt-1">{project?.progress}%</p>
+            </div>
+      </div>
 
           {/* Project Description */}
           <h2 className="text-2xl font-bold mb-3">Project Description</h2>
@@ -132,10 +132,9 @@ export default function Dashboard() {
             <div className="absolute right-0 top-0 bottom-0 w-20 flex items-center justify-center rounded-l-full">
               <button
                 className="bg-white text-blue-800 p-2 rounded-md"
-                active
                 onClick={() => setIsFloatWindowOpen(true)}
               >
-                ➕
+                ➕  
               </button>
             </div>
           </div>
