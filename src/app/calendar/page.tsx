@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import { Calendar, momentLocalizer, Views } from 'react-big-calendar';
+import { Calendar, momentLocalizer, Views, View } from 'react-big-calendar';
 import moment from 'moment';
 import "react-big-calendar/lib/css/react-big-calendar.css";
 
@@ -13,7 +13,7 @@ const events = [
 ];
 
 export default function MyCalendar() {
-  const [view, setView] = useState(Views.MONTH); // Initialize with Views.MONTH
+  const [view, setView] = useState<View>(Views.MONTH); // Explicitly type as View
 
   return (
     <div className="p-6">
@@ -27,8 +27,8 @@ export default function MyCalendar() {
           startAccessor="start"
           endAccessor="end"
           style={{ height: 500 }}
-          views={[Views.MONTH, Views.WEEK, Views.DAY]} // Use Views constants
-          defaultView={view} // Pass the view state
+          views={[Views.MONTH, Views.WEEK, Views.DAY]}
+          defaultView={view}
           onView={setView}
         />
       </div>
