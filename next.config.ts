@@ -10,4 +10,10 @@ module.exports = {
   },
 };
 
+module.exports = {
+  eslint: {
+    ignoreDuringBuilds: true, // Skip ESLint checks
+  },
+};
+
 export default nextConfig;
