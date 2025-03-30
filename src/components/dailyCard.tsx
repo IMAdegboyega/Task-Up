@@ -7,7 +7,7 @@ interface DailyCardProps {
   description: string;
   time: string;
   attendees: string[]; // Array of image URLs
-  isCompleted: boolean;
+  isCompleted?: boolean;
   onAccept?: () => void;
   onDecline?: () => void;
 }

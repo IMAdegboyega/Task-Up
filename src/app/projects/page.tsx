@@ -166,8 +166,11 @@ const Projects = () => {
           {/* Task List */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredTasks.map((task) => (
-              <div key={task.id} onClick={() => setSelectedProject(task.id)}>
-                <TaskCard {...task} />
+              <div key={task.id}>
+                <TaskCard 
+                  {...task}
+                  onClick={() => setSelectedProject(task.id)} // Add this line
+                />
               </div>
             ))}
           </div>

@@ -6,7 +6,7 @@ import Employees from "../employees/page";
 import Reports from "../reports/page";
 import Notification from "../notification/page";
 import MyCalendar from "../calendar/page";
-import Message from "../employees/message/page";
+import Message from "../message/page";
 import Settings from "../settings/page";
 import Sidebar from "@/components/sidebar";
 import SearchBar from "@/components/searchbar";

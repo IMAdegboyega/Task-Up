@@ -155,13 +155,16 @@ export default function Dashboard() {
             <div className="flex gap-4 overflow-x-auto">
               {/* Render actual tasks without excluded properties */}
               {filteredTasks.map((task, index) => (
-                <div key={index} onClick={() => setSelectedProject(task.id)}>
-                  <TaskCard {...task} />
+                <div key={task.id}>
+                  <TaskCard 
+                    {...task}
+                    onClick={() => setSelectedProject(task.id)} // Add this line
+                  />
                 </div>
               ))}
 
               {/* Render skeletons for missing tasks */}
-              {[...Array(skeletonCount)].map((_, index) => (
+              {/* {[...Array(skeletonCount)].map((_, index) => (
                 <TaskCard
                   key={`skeleton-${index}`}
                   title=""
@@ -170,7 +173,7 @@ export default function Dashboard() {
                   dueDate=""
                   isLoading
                 />
-              ))}
+              ))} */}
             </div>
           </div>
 

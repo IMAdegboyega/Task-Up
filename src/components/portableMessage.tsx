@@ -1,11 +1,13 @@
 import React from "react";
 import { MoreVertical } from "lucide-react";
 
+
+type MessageStatus = "online" | "read" | "offline" | string;
 interface Message {
   name: string;
   text: string;
   time: string;
-  status?: "online" | "read";
+  status?: MessageStatus;
 }
 
 interface MessageListProps {

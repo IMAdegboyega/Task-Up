@@ -1,92 +1,92 @@
 "use client";
 import { Badge } from "@/components/ui/badge";
+import { notificationTasks, notificationUpdates } from "@/lib/data/data";
 
-const updates = [
-  {
-    text: "A new project has been created (Reservation Application Integrated with Desktop App - PushUp Studios)",
-    link: "#",
-  },
-  {
-    text: "A new project has been created (Reservation Application Integrated with Desktop App - PushUp Studios)",
-    link: "#",
-  },
-];
 
-const tasks = [
-  {
-    name: "Reservation Application Integrated...",
-    teamLead: "Adams Evans",
-    status: "In Progress",
-    created: "19-10-2021",
-    expires: "30 days",
-    statusColor: "bg-yellow-500",
-  },
-  {
-    name: "Reservation Application Integrated...",
-    teamLead: "Adams Evans",
-    status: "Paused",
-    created: "20-10-2021",
-    expires: "20 days",
-    statusColor: "bg-red-500",
-  },
-  {
-    name: "Reservation Application Integrated...",
-    teamLead: "Adams Evans",
-    status: "Completed",
-    created: "18-10-2021",
-    expires: "0 mins",
-    statusColor: "bg-green-500",
-  },
-];
+const statusColors = {
+  'Completed': 'text-green-500',
+  'Paused': 'text-blue-400',
+  'Stuck': 'text-yellow-500',
+  'In Progress': 'text-pink-500',
+} as const;
 
-export default function Notification () {
+type TaskStatus = keyof typeof statusColors;
+
+interface Task {
+  name: string;
+  teamLead: string;
+  status: TaskStatus; // This ensures only valid status values can be used
+  created: string;
+  expires: string;
+}
+
+function isTaskStatus(status: string): status is TaskStatus {
+  return status in statusColors;
+}
+
+function getStatusColor(status: string): string {
+  return isTaskStatus(status) ? statusColors[status] : 'bg-gray-500';
+}
+
+
+export default function Notification() {
   return (
-    <div className="p-6">
-      {/* Page Header */}
-      <h1 className="text-2xl font-bold mb-4">Notifications</h1>
+    <div className="p-2 mx-auto">
 
       {/* New Updates Section */}
-      <div className="bg-white p-4 rounded-lg shadow-md mb-6">
-        <h3 className="font-semibold mb-2">New Updates:</h3>
-        <ul className="list-disc pl-5 space-y-1">
-          {updates.map((update, index) => (
-            <li key={index} className="text-sm text-gray-700">
-              {update.text}{" "}
-              <a href={update.link} className="text-blue-500 hover:underline">
-                Click to view
-              </a>
-            </li>
+      <div className="bg-white p-6 rounded-lg shadow-sm mb-8 text-black">
+        <h2 className="text-lg font-semibold mb-4">New Updates:</h2>
+        <div className="space-y-4 bg-gray-100 p-6 rounded-lg mb-8">
+          {notificationUpdates.map((update, index) => (
+            <div key={index} className="flex items-start p-2">
+              <div className="flex justify-between items-center w-full">
+                <p className="text-gray-800">
+                  {update.text}
+                </p>
+                <a href={update.link} className="text-blue-800 hover:underline whitespace-nowrap ml-4">
+                  Click to view
+                </a>
+              </div>
+            </div>
           ))}
-        </ul>
-      </div>
+        </div>
+      
 
-      {/* Task Updates Table */}
-      <div className="bg-white p-4 rounded-lg shadow-md">
-        <h3 className="font-semibold mb-2">Task Updates:</h3>
-        <table className="w-full border-collapse">
-          <thead>
-            <tr className="text-left bg-gray-100">
-              <th className="p-2">Task</th>
-              <th className="p-2">Team Lead</th>
-              <th className="p-2">Status</th>
-              <th className="p-2">Created</th>
-              <th className="p-2">Expires</th>
-            </tr>
-          </thead>
-          <tbody>
-            {tasks.map((task, index) => (
-              <tr key={index} className="border-t">
-                <td className="p-2">{task.name}</td>
-                <td className="p-2">{task.teamLead}</td>
-                <td className="p-2">
-                  <Badge className={`text-white ${task.statusColor}`}>{task.status}</Badge>
-                </td>
-                <td className="p-2">{task.created}</td>
-                <td className="p-2">{task.expires}</td>
-              </tr>
+        {/* Task Updates Section */}
+        <div className="bg-white p-0 rounded-lg shadow-sm">
+          <h2 className="text-lg font-semibold mb-4">Task updates:</h2>
+          
+          {/* Table Header */}
+          <div className="grid grid-cols-12 gap-4 mb-3 px-2 font-medium text-gray-500 text-sm">
+            <div className="col-span-5">Project title</div>
+            <div className="col-span-2">Team lead</div>
+            <div className="col-span-2">Status</div>
+            <div className="col-span-2">Created</div>
+            <div className="col-span-1">Expires</div>
+          </div>
+          
+          {/* Task Items */}
+          <div className="space-y-3 bg-gray-100 rounded-lg">
+            {notificationTasks.map((task, index) => (
+              <div key={index} className="grid grid-cols-12 gap-4 items-center p-4 hover:bg-gray-50 rounded-lg">
+                <div className="col-span-5 font-medium text-gray-900 truncate">
+                  {task.name}
+                </div>
+                <div className="col-span-2 flex items-center">
+                  <img src="/path/to/avatar.jpg" alt="User Avatar" className="w-8 h-8 rounded-full mr-2" />
+                  <span>{task.teamLead}</span>
+                </div>
+                <div className="col-span-2">
+                  <Badge className={`text-white ${getStatusColor(task.status)} bg-inherit shadow-none border-none px-2 py-1 rounded-md text-md`}>
+                    {task.status}
+                  </Badge>
+                </div>
+                <div className="col-span-2 text-sm text-gray-600">{task.created}</div>
+                <div className="col-span-1 text-sm text-gray-600">{task.expires}</div>
+              </div>
             ))}
-          </tbody>
-        </table>
+          </div>
+        </div>
       </div>
     </div>
   );

@@ -10,6 +10,7 @@ import {
   Legend,
 } from 'chart.js';
 import { Fullscreen } from "lucide-react";
+import { stats, weeklyPerformance, departmentPerformance } from "@/lib/data/data";
 
 ChartJS.register(BarElement, CategoryScale, LinearScale, Title, Tooltip, Legend);
 
@@ -26,29 +27,6 @@ const options = {
   },
 };
 
-const stats = [
-  { title: "Finished Projects", value: 150, color: "text-green-500" },
-  { title: "Finished Tasks", value: 300, color: "text-yellow-500" },
-  { title: "Delays", value: 5, color: "text-red-500" },
-  { title: "Total Clients", value: 562, trend: "-2%", trendColor: "text-red-500" },
-  { title: "New Projects", value: 892, trend: "+10%", trendColor: "text-green-500" },
-];
-
-const weeklyPerformance = [
-    { day: "M", value: 80, color: "bg-sky-500" },
-    { day: "T", value: 40, color: "bg-sky-500" },
-    { day: "W", value: 60, color: "bg-sky-500" },
-    { day: "T", value: 40, color: "bg-sky-500" },
-    { day: "F", value: 90, color: "bg-sky-500" },
-  ];
-
-const departmentPerformance = [
-  { name: "Design", value: 90, color: "bg-red-500" },
-  { name: "Development", value: 80, color: "bg-blue-500" },
-  { name: "Marketing", value: 60, color: "bg-indigo-500" },
-  { name: "Advertising", value: 40, color: "bg-green-500" },
-];
-
 export default function Reports() {
   return (
     <div className="p-8 bg-white w-full h-full min-h-screen text-black">
@@ -56,20 +34,43 @@ export default function Reports() {
       <h1 className="text-2xl font-bold mb-4">Statistics</h1>
 
       {/* Stats Grid */}
-      <div className="grid grid-cols-5 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
         {stats.map((stat, index) => (
-          <div key={index} className="bg-white p-4 rounded-lg shadow-md">
-            <h3 className={`text-lg font-semibold ${stat.color}`}>{stat.value}</h3>
-            <p className="text-gray-500">{stat.title}</p>
+        <div 
+          key={index} 
+          className="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow"
+        >
+          <div className="flex flex-col h-full justify-between">
+            {/* Main Value */}
+            <h3 className={`text-3xl font-bold ${stat.color} mb-2`}>{stat.value}</h3>
+        
+            {/* Title */}
+            <p className="text-gray-600 text-lg mb-3">{stat.title}</p>
+        
+            {/* Trend Indicator */}
             {stat.trend && (
-              <span className={`${stat.trendColor} text-sm`}>{stat.trend} than last month</span>
+            <div className="flex items-center mt-auto">
+              <span className={`${stat.trendColor} text-sm font-medium`}>
+                {stat.trend === 'up' ? (
+                  <svg className="w-4 h-4 inline mr-1" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M12 7a1 1 0 01-1.707-.707L12 4.586V7z" clipRule="evenodd" />
+                  </svg>
+                ) : (
+                  <svg className="w-4 h-4 inline mr-1" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M12 13a1 1 0 01-.707.293L12 15.414V13z" clipRule="evenodd" />
+                  </svg>
+                )}
+                {stat.trend || ''} than last month
+              </span>
+            </div>
             )}
           </div>
-        ))} 
-      </div>
+        </div>
+      ))}
+    </div>
 
       {/* Performance Charts */}
-      <div className="grid grid-cols-2 gap-6 mt-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
         {/* Team Monthly Performance (Bar Chart) */}
         <div className=" bg-white p-4 rounded-lg">
           <h3 className="font-semibold mb-2">Team Monthly Performance</h3>
