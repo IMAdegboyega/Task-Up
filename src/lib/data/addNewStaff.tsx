@@ -94,7 +94,7 @@ const AddNewStaffForm: React.FC<{ onClose: () => void }> = ({ onClose }) => {
       <div className="text-right">
         <button
           type="submit"
-          className="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-900 transition"
+          className="bg-blue-800 text-white px-4 py-2 rounded-md hover:bg-blue-900"
         >
           Submit
         </button>

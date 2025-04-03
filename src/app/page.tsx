@@ -10,9 +10,12 @@ import Message from "./message/page";
 import Settings from "./settings/page";
 import Sidebar from "@/components/sidebar";
 import SearchBar from "@/components/searchbar";
+import { redirect } from "next/navigation";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   const [activeTab, setActiveTab] = useState("Dashboard");
+  //redirect("/greetingPage");
+  // Redirect to the greeting page if the user is not authenticated
 
   const pageTitles: Record<string, string> = {
     Dashboard: "Welcome back, Abigail",

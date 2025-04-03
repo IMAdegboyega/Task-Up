@@ -1,3 +1,4 @@
+
 export const tasks = [
   {
     id: "1",
@@ -64,17 +65,17 @@ export const stats = [
 ];
 
 export const weeklyPerformance = [
-    { day: "M", value: 80, color: "bg-sky-500" },
-    { day: "T", value: 40, color: "bg-sky-500" },
-    { day: "W", value: 60, color: "bg-sky-500" },
-    { day: "T", value: 40, color: "bg-sky-500" },
-    { day: "F", value: 90, color: "bg-sky-500" },
+    { day: "M", value: 90, color: "bg-blue-500" },
+    { day: "T", value: 40, color: "bg-blue-500" },
+    { day: "W", value: 60, color: "bg-blue-500" },
+    { day: "T", value: 40, color: "bg-blue-500" },
+    { day: "F", value: 90, color: "bg-blue-500" },
   ];
 
 export const departmentPerformance = [
   { name: "Design", value: 90, color: "bg-red-500" },
   { name: "Development", value: 80, color: "bg-blue-500" },
-  { name: "Marketing", value: 60, color: "bg-indigo-500" },
+  { name: "Marketing", value: 60, color: "bg-blue-900" },
   { name: "Advertising", value: 40, color: "bg-green-500" },
 ];
 

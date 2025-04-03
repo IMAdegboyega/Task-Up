@@ -26,11 +26,6 @@ const Projects = () => {
   const [selectedProject, setSelectedProject] = useState<string | null>(null);
   const [currentDate, setCurrentDate] = useState(""); // Fix SSR date issue
 
-  // Fix SSR mismatch caused by different date formats
-  useEffect(() => {
-    setCurrentDate(new Date().toLocaleDateString());
-  }, []);
-
   // Categorize tasks properly
   const categorizedTasks = useMemo(() => {
     return tasks.map((task) => ({
@@ -66,69 +61,79 @@ const Projects = () => {
     <div className="p-8 bg-white min-h-screen">
       {project ? (
         /* Project Details View */
-        <div className="max-w-6xl mx-auto bg-white p-8 rounded-lg shadow-none relative left-0 right-0 top-0 bottom-0">
-          {/* Back Button */}
-          <button
-            onClick={() => setSelectedProject(null)}
-            className="mb-4 flex items-center text-gray-600 hover:text-black"
-          >
-            ← Back to Projects
-          </button>
+        <div className="max-w-6xl mx-auto bg-white p-8 pt-6 rounded-lg shadow-none relative left-0 right-0 top-0 bottom-0 flex flex-col min-h-screen">
+          {/* Content Wrapper to push "DELETE PROJECT" down */}
+          <div className="flex-grow">
+            {/* Back Button */}
+            <button       
+              onClick={() => setSelectedProject(null)}
+      className="mb-4 flex items-center text-gray-600 hover:text-black"
+            >
+              ← Back to Projects
+            </button>
 
-          {/* Project Details Header */}
-          <header className="mb-6 border-b pb-4">
-            <h1 className="text-3xl font-bold">{project?.name} (Project)</h1>
-            <p className="text-gray-500 mt-2">
-              Created by <span className="font-medium">{project?.createdBy}</span> on{" "}
-              {project && new Date(project.createdDate).toLocaleDateString()}
-            </p>
-          </header>
-
-          {/* Buttons */}
-          <div className="flex items-center gap-4 mb-6">
-            <BlueButton label="New Task" variant="filled" active onClick={() => setIsFloatWindowOpen(true)}/>
-            <BlueButton
-              label="Invite People"
-              icon={<FaUsers className="text-blue-800" />}
-              variant="outlined"
-            />
-            <BlueButton
-              label="45 Comments"
-              icon={<FaCommentDots className="text-blue-800" />}
-              variant="ghost"
-            />
-          </div>
-
-          {/* Project Info */}
-          <div className="grid grid-cols-3 gap-6 items-center mb-6 bg-white p-4 rounded-lg shadow-sm">
-            <div>
-              <p className="text-sm text-gray-500">📅 Date Created</p>
-              <p className="text-gray-800 font-medium">
-                {project && new Date(project.createdDate).toLocaleDateString()}
+            {/* Project Details Header */}
+            <header className="mb-6 border-b pb-4">
+              <h1 className="text-3xl font-bold">{project?.name} (Project)</h1>
+              <p className="text-gray-500 mt-2">
+        Created by <span className="font-medium">{project?.createdBy}</span> on{" "}
+        {project && new Date(project.createdDate).toLocaleDateString()}
               </p>
+            </header>
+
+            {/* Buttons */}
+            <div className="flex items-center gap-4 mb-6">
+              <BlueButton label="New Task" variant="filled" active onClick={() => setIsFloatWindowOpen        (true)} />
+              <BlueButton
+                label="Invite People"
+                icon={<FaUsers className="text-blue-800" />}
+                variant="outlined"
+              />
+              <BlueButton
+                label="45 Comments"
+                icon={<FaCommentDots className="text-blue-800" />}
+                variant="ghost"
+              />
             </div>
-            <div>
-              <p className="text-sm text-gray-500">📅 Due Date</p>
-              <p className="text-gray-800 font-medium">
-                {project && new Date(project.dueDate).toLocaleDateString()}
-              </p>
-            </div>
-            <div>
-              <p className="text-sm text-gray-500">📊 Total Progress</p>
-              <div className="relative w-full h-2 bg-gray-200 rounded-full">
-                <div
-                  className="absolute top-0 left-0 h-full bg-green-700 rounded-full"
-                  style={{ width: `${project?.progress}%` }}
-                ></div>
+
+            {/* Project Info */}
+            <div className="grid grid-cols-3 gap-6 items-center mb-6 bg-white p-4 rounded-lg shadow-sm">
+              <div>
+                <p className="text-sm text-gray-500">📅 Date Created</p>
+                <p className="text-gray-800 font-medium">
+                  {project && new Date(project.createdDate).toLocaleDateString()}
+                </p>
               </div>
-              <p className="text-gray-800 font-medium mt-1">{project?.progress}%</p>
+              <div>
+                <p className="text-sm text-gray-500">📅 Due Date</p>
+                <p className="text-gray-800 font-medium">
+          {project && new Date(project.dueDate).toLocaleDateString()}
+                </p>
+              </div>
+              <div>
+                <p className="text-sm text-gray-500">📊 Total Progress</p>
+                <div className="relative w-full h-2 bg-gray-200 rounded-full">
+          <div
+            className="absolute top-0 left-0 h-full bg-green-700 rounded-full"
+            style={{ width: `${project?.progress}%` }}
+          ></div>
+                </div>
+                <p className="text-gray-800 font-medium mt-1">{project?.progress}%</p>
+              </div>
             </div>
+
+            {/* Project Description */}
+            <h2 className="text-2xl font-bold mb-3">Project Description</h2>
+            <p className="text-gray-600 leading-relaxed">{project?.description}</p>
           </div>
 
-          {/* Project Description */}
-          <h2 className="text-2xl font-bold mb-3">Project Description</h2>
-          <p className="text-gray-600 leading-relaxed">{project?.description}</p>
+          {/* DELETE PROJECT Button at the Bottom */}
+          <div className="w-full max-w-md h-px bg-black mx-auto mb-3"></div>
+          <div onClick={() => {}} className="text-red-600 text-center font-medium mt-auto cursor-pointer hover:text-red-800 transition-colors">
+            DELETE PROJECT
+          </div>
         </div>
+
       ) : (
         /* Projects List View */
         <>
@@ -183,7 +188,7 @@ const Projects = () => {
         <AddNewProjectForm onClose={() => setIsFloatWindowOpen(false)} />
       </FloatWindow>
     </div>
-  );
+  ); 
 };
 
 export default Projects;

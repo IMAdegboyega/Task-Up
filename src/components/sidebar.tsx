@@ -14,7 +14,7 @@ const Sidebar = ({setActiveTab, activeTab} : {setActiveTab: (tab:string) => void
           key={tab}
           onClick={() => setActiveTab(tab)}
           className={`w-full text-center p-4 text-lg h-14 rounded-none transition-all duration-200 ${
-              activeTab === tab ? "bg-white text-blue-800" : "bg-blue-800 hover:bg-white hover:text-blue-800"
+              activeTab === tab ? "bg-white text-blue-800 font-bold" : "bg-blue-800  hover:bg-blue-600 hover:text-white"
             }`} 
         >
           {tab}
