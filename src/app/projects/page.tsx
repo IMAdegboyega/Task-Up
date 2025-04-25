@@ -18,7 +18,16 @@ const headerConfig = {
   Done: { text: "COMPLETED PROJECTS", color: "text-green-600" },
 };
 
+
 const Projects = () => {
+  const [projects, setProjects] = useState([]);
+
+  const fetchProjects = async () => {
+    const res = await fetch("/api/projects"); // make sure this route returns all projects
+    const data = await res.json();
+    setProjects(data.projects); // Adjust based on your API response
+  };
+
   const router = useRouter();
 
   const [activeFilter, setActiveFilter] = useState<TaskStatus | "all">("all");
@@ -185,7 +194,11 @@ const Projects = () => {
       {/* Float Window (Modal) */}
       <FloatWindow isOpen={isFloatWindowOpen} onClose={() => setIsFloatWindowOpen(false)}>
         <h2 className="text-lg font-bold mb-4">Add New Project</h2>
-        <AddNewProjectForm onClose={() => setIsFloatWindowOpen(false)} />
+        <AddNewProjectForm 
+          onClose={() => setIsFloatWindowOpen(false)} 
+          onProjectCreated={fetchProjects} 
+        />
+
       </FloatWindow>
     </div>
   ); 

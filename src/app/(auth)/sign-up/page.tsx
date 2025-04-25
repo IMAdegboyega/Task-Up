@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 const SignUp = () => {
@@ -8,10 +9,28 @@ const SignUp = () => {
   const [LastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const router = useRouter();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Sign-up:", { FirstName,LastName, email, password });
+
+    const res = await fetch('/api/users/signup', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ name: `${FirstName} ${LastName}`, email, password }),
+    });
+
+    const data = await res.json();
+
+    if (res.ok) {
+      alert('Signup successful!');
+      router.push('/'); // redirect to home page
+    } else {
+      alert(data.message || 'Signup failed');
+    }
+
   };
 
   return (

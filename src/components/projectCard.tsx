@@ -1,6 +1,6 @@
 import { MoreHorizontal, Clock } from "lucide-react";
 import Link from "next/link";
-import ProgressBar from "./ProgressBar";
+import ProgressBar from "./progressBar";
 
 interface ProjectCardProps {
   id: string;

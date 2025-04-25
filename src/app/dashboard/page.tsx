@@ -6,6 +6,7 @@ import { tasks } from "@/lib/data/data";
 import FloatWindow from "@/components/floats";
 import { useState } from "react";
 import AddNewProjectForm from "@/lib/data/addNewProjectForm";
+import IncompleteProjectSummary from "@/components/incomplete";
 
 export default function Dashboard() {
   const [isFloatWindowOpen, setIsFloatWindowOpen] = useState(false);
@@ -142,7 +143,7 @@ export default function Dashboard() {
           {/* Task Summary */}
           <div className="bg-blue-800 text-white p-6 rounded-lg shadow-md">
             <p className="text-lg">
-              You have 2 tasks close to their due dates rush to finish them before it expires.
+              You have <IncompleteProjectSummary />  tasks close to their due dates rush to finish them before it expires.
             </p>
             <button className="mt-4 bg-white text-blue-800 px-20 py-1 rounded-lg shadow-md">
               MY TASKS

@@ -1,7 +1,7 @@
 // AddNewProjectForm.tsx
 import React, { useState } from "react";
 
-const AddNewProjectForm: React.FC<{ onClose: () => void }> = ({ onClose }) => {
+const AddNewProjectForm: React.FC<{ onClose: () => void; onProjectCreated: () => void }> = ({ onClose, onProjectCreated }) => {
   const [formData, setFormData] = useState({
     projectName: "",
     createdBy: "",
@@ -14,10 +14,27 @@ const AddNewProjectForm: React.FC<{ onClose: () => void }> = ({ onClose }) => {
     setFormData({ ...formData, [name]: value });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("New Project:", formData);
-    onClose(); // Close after submitting
+
+    try {
+      const res = await fetch("/api/projects/add", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ...formData, status: "incomplete" }),
+      });
+
+      if (res.ok) {
+        const data = await res.json();
+        console.log("Project created:", data);
+        onProjectCreated(); // 🔥 Fetch updated projects
+        onClose();
+      } else {
+        console.error("Failed to create project");
+      }
+    } catch (err) {
+      console.error("Error submitting form:", err);
+    }
   };
 
   return (
