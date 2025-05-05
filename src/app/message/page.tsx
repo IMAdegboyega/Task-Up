@@ -1,10 +1,11 @@
 // pages/messages.tsx
 "use client";
 
-import ChatBubble from "@/components/messaging/chatbubble";
-import ChatHeader from "@/components/messaging/chatheader";
-import ChatInput from "@/components/messaging/chatinput";
-import ChatSidebar from "@/components/messaging/chatsidebar";
+
+import ChatBubble from "@/components/messaging/ChatBubble";
+import ChatHeader from "@/components/messaging/ChatHeader";
+import ChatInput from "@/components/messaging/ChatInput";
+import ChatSidebar from "@/components/messaging/ChatSidebar";
 import { useEffect, useState } from "react";
 import io from "socket.io-client";
 
