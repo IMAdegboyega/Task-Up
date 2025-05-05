@@ -17,7 +17,7 @@ const IncompleteProjectSummary = () => {
   return (
     <p className="text-lg font-semibold mt-4">
       {count !== null
-        ? `You have ${count} project${count === 1 ? "" : "s"} that are not completed.`
+        ? `You have ${count} uncompleted project${count === 1 ? "" : "s"}`
         : "Loading..."}
     </p>
   );
