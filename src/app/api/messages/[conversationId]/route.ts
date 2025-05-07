@@ -3,7 +3,7 @@ import {connectToDatabase} from '@/lib/mongodb';
 import Message from '@/lib/models/message';
 import { verifyToken } from '@/lib/authMiddleware';
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+export async function GET(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'GET') return res.status(405).end();
 
   try {
