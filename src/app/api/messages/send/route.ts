@@ -1,44 +1,46 @@
-import type { NextApiRequest, NextApiResponse } from 'next';
-import {connectToDatabase} from '@/lib/mongodb';
+import { NextRequest, NextResponse } from 'next/server';
+import { connectToDatabase } from '@/lib/mongodb';
 import Message from '@/lib/models/message';
 import { verifyToken } from '@/lib/authMiddleware';
 
-export const config = {
-  api: {
-    bodyParser: true,
-    externalResolver: true, // prevents "API resolved without sending" warning
-  },
-};
-
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  if (req.method !== 'POST') return res.status(405).end();
-
+/**
+ * POST /api/messages/send
+ * Sends a new message from the authenticated user to a recipient.
+ */
+export async function POST(req: NextRequest) {
   try {
-    const user = verifyToken(req); // Sender info from JWT
+    // 🔐 Authenticate user and extract ID from JWT
+    const user = verifyToken(req);
     const senderId = user.id;
-    const { recipientId, content } = req.body;
 
-    if (!recipientId || !content) {
-      return res.status(400).json({ error: 'Missing recipient or content' });
+    // 🧾 Parse request body
+    const { recipientId, content } = await req.json();
+
+    if (!recipientId || !content || typeof recipientId !== 'string' || typeof content !== 'string') {
+      return NextResponse.json({ error: 'Missing or invalid recipient or content' }, { status: 400 });
     }
 
+    // 📦 Connect to MongoDB
     await connectToDatabase();
 
+    // 📨 Save new message to DB
     const newMessage = await Message.create({
-      senderId: user.id,
+      senderId,
       recipientId,
       content,
     });
 
-    const io = (global as any).io;
+    // 📡 Emit socket event to the shared room (if socket server is running)
+    const io = (globalThis as any).io;
     if (io) {
       const room = [senderId, recipientId].sort().join('-');
-      io.to(room).emit('receiveMessage', Message);
+      io.to(room).emit('receiveMessage', newMessage);
     }
 
-
-    return res.status(201).json(newMessage);
+    // ✅ Respond with created message
+    return NextResponse.json(newMessage, { status: 201 });
   } catch (err: any) {
-    return res.status(401).json({ error: err.message });
+    // ❌ Token error or database issue
+    return NextResponse.json({ error: err.message }, { status: 401 });
   }
 }

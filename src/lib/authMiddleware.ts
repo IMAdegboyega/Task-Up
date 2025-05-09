@@ -1,22 +1,30 @@
+import { NextRequest } from 'next/server';
 import jwt from 'jsonwebtoken';
-import { NextApiRequest } from 'next';
 
-interface DecodedToken {
+const JWT_SECRET = process.env.JWT_SECRET!; // Make sure this is defined in your env
+
+interface DecodedUser {
   id: string;
   email?: string;
-  iat: number;
-  exp: number;
+  iat?: number;
+  exp?: number;
 }
 
-export function verifyToken(req: NextApiRequest): DecodedToken {
-  const authHeader = req.headers.authorization;
-  if (!authHeader) throw new Error('No token provided');
+/**
+ * Extracts and verifies JWT from the request (App Router compatible)
+ */
+export function verifyToken(req: NextRequest): DecodedUser {
+  // Try to get the token from cookies
+  const token = req.cookies.get('token')?.value
+    // Or from Authorization header: "Bearer <token>"
+    || req.headers.get('authorization')?.split(' ')[1];
 
-  const token = authHeader.split(' ')[1]; // Format: "Bearer <token>"
-  if (!token) throw new Error('Invalid authorization header');
+  if (!token) {
+    throw new Error('No token provided');
+  }
 
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET!) as DecodedToken;
+    const decoded = jwt.verify(token, JWT_SECRET) as DecodedUser;
     return decoded;
   } catch (err) {
     throw new Error('Invalid or expired token');

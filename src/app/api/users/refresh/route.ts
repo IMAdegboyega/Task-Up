@@ -3,22 +3,35 @@ import jwt from "jsonwebtoken";
 
 export async function POST(req: NextRequest) {
   try {
-    const { refreshToken } = await req.json(); // ✅ declare this first
+    const { refreshToken } = await req.json();
 
+    // 🔐 Validate input
     if (!refreshToken) {
-      return NextResponse.json({ message: "Missing refresh token" }, { status: 400 });
+      return NextResponse.json(
+        { message: "Missing refresh token" },
+        { status: 400 }
+      );
     }
 
-    const decoded = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET!); // ✅ now safe to use
+    // ✅ Verify the refresh token
+    const decoded = jwt.verify(
+      refreshToken,
+      process.env.REFRESH_TOKEN_SECRET!
+    ) as { id: string };
 
+    // ♻️ Generate a new access token
     const accessToken = jwt.sign(
-      { id: (decoded as any).id },
+      { id: decoded.id },
       process.env.JWT_SECRET!,
       { expiresIn: "15m" }
     );
 
     return NextResponse.json({ accessToken });
-  } catch (err) {
-    return NextResponse.json({ message: "Invalid refresh token" }, { status: 403 });
+  } catch (err: any) {
+    console.error("❌ Refresh error:", err.message);
+    return NextResponse.json(
+      { message: "Invalid or expired refresh token" },
+      { status: 403 }
+    );
   }
 }

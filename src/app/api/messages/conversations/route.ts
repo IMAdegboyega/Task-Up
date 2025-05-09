@@ -1,24 +1,36 @@
-import type { NextApiRequest, NextApiResponse } from 'next';
-import {connectToDatabase} from '@/lib/mongodb';
+import { NextRequest, NextResponse } from 'next/server';
+import { connectToDatabase } from '@/lib/mongodb';
 import Message from '@/lib/models/message';
 import { verifyToken } from '@/lib/authMiddleware';
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  if (req.method !== 'GET') return res.status(405).end();
-
+/**
+ * GET /api/messages
+ * Fetches all conversations for the logged-in user with the most recent message in each.
+ */
+export async function GET(req: NextRequest) {
   try {
+    // 🔐 Authenticate the user using the JWT token
     const user = verifyToken(req);
+
+    // 🧩 Connect to MongoDB
     await connectToDatabase();
 
-    // Find all messages involving the user
+    // 📨 Find all messages where the user is either sender or recipient, sorted by recent update
     const messages = await Message.find({
       $or: [{ senderId: user.id }, { recipientId: user.id }],
     }).sort({ updatedAt: -1 });
 
-    const conversationsMap = new Map<string, any>();
+    // 🗂️ Group messages into conversations based on the other user's ID
+    const conversationsMap = new Map<string, {
+      userId: string;
+      lastMessage: string;
+      lastTimestamp: Date;
+    }>();
 
     messages.forEach((msg) => {
       const otherUserId = msg.senderId === user.id ? msg.recipientId : msg.senderId;
+
+      // 🧠 Keep only the latest message per conversation
       if (!conversationsMap.has(otherUserId)) {
         conversationsMap.set(otherUserId, {
           userId: otherUserId,
@@ -30,8 +42,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     const conversations = Array.from(conversationsMap.values());
 
-    return res.status(200).json({ conversations });
+    // ✅ Return all grouped conversations
+    return NextResponse.json({ conversations }, { status: 200 });
   } catch (err: any) {
-    return res.status(401).json({ error: err.message });
+    // ❌ Return error message if anything goes wrong
+    return NextResponse.json({ error: err.message }, { status: 401 });
   }
 }

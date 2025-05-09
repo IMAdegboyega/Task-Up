@@ -1,28 +1,37 @@
-import type { NextApiRequest, NextApiResponse } from 'next';
-import {connectToDatabase} from '@/lib/mongodb';
+import { NextRequest, NextResponse } from 'next/server';
+import { connectToDatabase } from '@/lib/mongodb';
 import Message from '@/lib/models/message';
 import { verifyToken } from '@/lib/authMiddleware';
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  if (req.method !== 'PATCH') return res.status(405).end();
-
+/**
+ * PATCH /api/messages/seen
+ * Marks all messages from a specific conversation partner as seen.
+ */
+export async function PATCH(req: NextRequest) {
   try {
+    // 🔐 Verify and extract the user from the JWT token
     const user = verifyToken(req);
-    const { conversationWithId } = req.body;
 
-    if (!conversationWithId) {
-      return res.status(400).json({ error: 'conversationWithId is required' });
+    // 🧾 Parse the request body (must be called on NextRequest)
+    const body = await req.json();
+    const { conversationWithId } = body;
+
+    if (!conversationWithId || typeof conversationWithId !== 'string') {
+      return NextResponse.json({ error: 'conversationWithId is required' }, { status: 400 });
     }
 
+    // 🧩 Connect to MongoDB
     await connectToDatabase();
 
+    // ✅ Mark all unseen messages from the other user as seen
     await Message.updateMany(
       { senderId: conversationWithId, recipientId: user.id, seen: false },
       { $set: { seen: true } }
     );
 
-    return res.status(200).json({ message: 'Messages marked as seen' });
+    return NextResponse.json({ message: 'Messages marked as seen' }, { status: 200 });
   } catch (err: any) {
-    return res.status(401).json({ error: err.message });
+    // ❌ Handle token errors or database issues
+    return NextResponse.json({ error: err.message }, { status: 401 });
   }
 }

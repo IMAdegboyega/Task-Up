@@ -8,6 +8,10 @@ export async function POST(req: NextRequest) {
   try {
     const { email, password } = await req.json();
 
+    if (!email || !password) {
+      return NextResponse.json({ message: "Email and password are required" }, { status: 400 });
+    }
+
     await connectToDatabase();
     const user = await User.findOne({ email });
 
@@ -20,14 +24,13 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ message: "Invalid credentials" }, { status: 403 });
     }
 
-    // Generate access token (short-lived)
+    // Generate tokens
     const accessToken = jwt.sign(
       { id: user._id },
       process.env.JWT_SECRET!,
-      { expiresIn: "1h" }
-    ); 
+      { expiresIn: "15m" } // reduced to 15m for tighter security
+    );
 
-    // Generate refresh token (longer-lived)
     const refreshToken = jwt.sign(
       { id: user._id },
       process.env.REFRESH_TOKEN_SECRET!,
@@ -35,12 +38,17 @@ export async function POST(req: NextRequest) {
     );
 
     return NextResponse.json({
-      message: "Sign-In successful",
+      message: "Sign-in successful",
       accessToken,
-      refreshToken
+      refreshToken,
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+      },
     });
-  } catch (err) {
-    console.error(err);
-    return NextResponse.json({ message: "Something went wrong" }, { status: 500 });
+  } catch (err: any) {
+    console.error("❌ Login error:", err.message);
+    return NextResponse.json({ message: "Internal server error" }, { status: 500 });
   }
 }

@@ -1,22 +1,25 @@
-// /app/api/projects/route.ts
-
 import { NextRequest, NextResponse } from "next/server";
-import { connectToDatabase } from "@/lib/mongodb"; // connects to your MongoDB
-import Project from "@/lib/models/projects"; // your Project mongoose model
+import { connectToDatabase } from "@/lib/mongodb"; // Function to connect to MongoDB
+import Project from "@/lib/models/projects"; // Mongoose model for projects
 
-// Handle GET requests (fetch all projects)
+/**
+ * GET /api/projects
+ * Fetches all projects from the database, sorted by creation date (newest first).
+ */
 export async function GET(req: NextRequest) {
   try {
-    // Connect to MongoDB
+    // 🔌 Establish MongoDB connection
     await connectToDatabase();
 
-    // Find all projects in the database
-    const projects = await Project.find().sort({ createdAt: -1 }); // newest first
+    // 📦 Retrieve all projects, sorted by most recent
+    const projects = await Project.find().sort({ createdAt: -1 });
 
-    // Return the projects as JSON
-    return NextResponse.json({projects});
+    // ✅ Return the list of projects in JSON format
+    return NextResponse.json({ projects });
   } catch (error) {
     console.error("❌ Error fetching projects:", error);
+
+    // ❌ Return error if something goes wrong
     return NextResponse.json(
       { message: "Failed to fetch projects" },
       { status: 500 }

@@ -1,16 +1,25 @@
-import { NextResponse } from "next/server";
-import { connectToDatabase } from "@/lib/mongodb"; // Update this to your actual path
-import Project from "@/lib/models/projects"; // Make sure this model exists and points to your projects collection
+import { NextResponse } from 'next/server';
+import { connectToDatabase } from '@/lib/mongodb';
+import Project from '@/lib/models/projects';
 
+/**
+ * GET /api/projects
+ * Retrieves all projects that are not marked as "completed".
+ */
 export async function GET() {
   try {
+    // 🔌 Connect to MongoDB
     await connectToDatabase();
 
-    const incompleteProjects = await Project.find({ status: { $ne: "completed" } });
+    // 📦 Fetch projects where status is not 'completed'
+    const incompleteProjects = await Project.find({ status: { $ne: 'completed' } });
 
+    // ✅ Return list of incomplete projects
     return NextResponse.json({ projects: incompleteProjects });
   } catch (err) {
-    console.error("Error:", err);
-    return NextResponse.json({ message: "Server error" }, { status: 500 });
+    console.error('❌ Error fetching projects:', err);
+
+    // ❌ Return error response on failure
+    return NextResponse.json({ message: 'Server error' }, { status: 500 });
   }
 }
