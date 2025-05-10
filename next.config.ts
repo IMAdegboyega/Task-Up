@@ -1,12 +1,14 @@
-import type { NextConfig } from "next";
-
-const nextConfig: NextConfig = {
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  experimental: {
+    // appDir is enabled by default in Next.js 13+ when using the /app directory
+  },
   typescript: {
-    ignoreBuildErrors: true, // Skip TypeScript errors
+    ignoreBuildErrors: true,
   },
   eslint: {
-    ignoreDuringBuilds: true, // Skip ESLint checks
-  }
+    ignoreDuringBuilds: true,
+  },
 };
 
-export default nextConfig;
+module.exports = nextConfig;
