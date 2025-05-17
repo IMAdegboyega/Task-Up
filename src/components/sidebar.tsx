@@ -1,6 +1,8 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import { useRouter } from "next/navigation";
+import { ImSpinner2 } from "react-icons/im";
+import { HiMenu, HiX } from "react-icons/hi";
 
 interface SidebarProps {
   setActiveTab: (tab: string) => void;
@@ -8,14 +10,20 @@ interface SidebarProps {
   setUser: (user: any) => void;
 }
 
+
 const Sidebar = ({ setActiveTab, activeTab, setUser }: SidebarProps) => {
   const router = useRouter();
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
+  const [isOpen, setIsOpen] = useState(false); // Sidebar visibility for mobile
 
   const handleLogout = () => {
-    localStorage.removeItem("accessToken");
-    localStorage.removeItem("refreshToken");
-    setUser(null); // This clears user state in the layout/page
-    router.replace("/greetingPage"); // Navigate to greeting page
+    setIsLoggingOut(true);
+    setTimeout(() => {
+      localStorage.removeItem("accessToken");
+      localStorage.removeItem("refreshToken");
+      setUser(null);
+      router.replace("/greetingPage");
+    }, 1200);
   };
 
   return (
@@ -47,10 +55,20 @@ const Sidebar = ({ setActiveTab, activeTab, setUser }: SidebarProps) => {
       </nav>
 
       <button
-        onClick={handleLogout}
-        className="w-full p-2 hover:bg-red-700 text-white text-center mt-auto"
-      >
-        Log Out
+          onClick={handleLogout}
+          disabled={isLoggingOut}
+          className={`w-full flex items-center justify-center p-3 mt-auto transition-colors duration-200 ${
+            isLoggingOut ? "bg-red-400 cursor-not-allowed" : "hover:bg-red-700"
+          }`}
+        >
+          {isLoggingOut ? (
+            <>
+              <ImSpinner2 className="animate-spin mr-2 text-white" />
+              <span className="animate-pulse">Logging out...</span>
+            </>
+          ) : (
+            "Log Out"
+          )}
       </button>
     </div>
   );
